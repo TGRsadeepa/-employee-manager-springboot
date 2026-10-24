@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #b00020;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success {
+            padding: 12px;
+            background: #e5f5e9;
+            color: #185c2b;
+            margin-bottom: 20px;
+        }
+
+        button, .button {
+            display: inline-block;
+            padding: 9px 14px;
+            border: none;
+            border-radius: 4px;
+            background: #2459a6;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .delete {
+            background: #b42318;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .actions {
+            white-space: nowrap;
+        }
+
+        .actions form {
+            display: inline-block;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Employee Management</h1>
+
+    <div class="success"
+         role="status"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
+
+    <div class="card">
+        <h2>Employee Registration</h2>
+
+        <form th:action="@{/employees}"
+              th:object="${employee}"
+              method="post"
+              novalidate>
+
+            <div class="field">
+                <label for="fullName">Full Name</label>
+                <input type="text"
+                       id="fullName"
+                       th:field="*{fullName}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('fullName')}"
+                     th:errors="*{fullName}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email"
+                       id="email"
+                       th:field="*{email}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="phone">Phone Number</label>
+                <input type="tel"
+                       id="phone"
+                       th:field="*{phone}"
+                       placeholder="0771234567"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('phone')}"
+                     th:errors="*{phone}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="department">Department</label>
+                <input type="text"
+                       id="department"
+                       th:field="*{department}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('department')}"
+                     th:errors="*{department}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="salary">Salary</label>
+                <input type="number"
+                       id="salary"
+                       th:field="*{salary}"
+                       min="0.01"
+                       step="0.01"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('salary')}"
+                     th:errors="*{salary}">
+                </div>
+            </div>
+
+            <button type="submit">Save Employee</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Registered Employees</h2>
+
+        <p>
+            Total employees:
+            <strong th:text="${#lists.size(employees)}">0</strong>
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:if="${#lists.isEmpty(employees)}">
+                    <td colspan="7">No employees registered yet.</td>
+                </tr>
+
+                <tr th:each="emp : ${employees}">
+                    <td th:text="${emp.id}"></td>
+                    <td th:text="${emp.fullName}"></td>
+                    <td th:text="${emp.email}"></td>
+                    <td th:text="${emp.phone}"></td>
+                    <td th:text="${emp.department}"></td>
+                    <td th:text="${emp.salary}"></td>
+
+                    <td class="actions">
+                        <a class="button"
+                           th:href="@{/employees/{id}/edit(id=${emp.id})}">
+                            Edit
+                        </a>
+
+                        <form th:action="@{/employees/{id}/delete(id=${emp.id})}"
+                              method="post"
+                              onsubmit="return confirm('Delete this employee?');">
+                            <button type="submit" class="delete">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
