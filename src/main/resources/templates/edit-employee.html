@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 24px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: #b00020;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button, .button {
+            display: inline-block;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #2459a6;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .cancel {
+            background: #555;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Edit Employee</h1>
+
+    <form th:action="@{/employees/{id}/update(id=${employee.id})}"
+          th:object="${employee}"
+          method="post"
+          novalidate>
+
+        <div class="field">
+            <label for="fullName">Full Name</label>
+            <input type="text"
+                   id="fullName"
+                   th:field="*{fullName}"
+                   required>
+
+            <div class="error"
+                 th:if="${#fields.hasErrors('fullName')}"
+                 th:errors="*{fullName}">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="email">Email</label>
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   required>
+
+            <div class="error"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:errors="*{email}">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="phone">Phone Number</label>
+            <input type="tel"
+                   id="phone"
+                   th:field="*{phone}"
+                   required>
+
+            <div class="error"
+                 th:if="${#fields.hasErrors('phone')}"
+                 th:errors="*{phone}">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="department">Department</label>
+            <input type="text"
+                   id="department"
+                   th:field="*{department}"
+                   required>
+
+            <div class="error"
+                 th:if="${#fields.hasErrors('department')}"
+                 th:errors="*{department}">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="salary">Salary</label>
+            <input type="number"
+                   id="salary"
+                   th:field="*{salary}"
+                   min="0.01"
+                   step="0.01"
+                   required>
+
+            <div class="error"
+                 th:if="${#fields.hasErrors('salary')}"
+                 th:errors="*{salary}">
+            </div>
+        </div>
+
+        <button type="submit">Update Employee</button>
+
+        <a class="button cancel" th:href="@{/employees}">
+            Cancel
+        </a>
+    </form>
+
+</div>
+</body>
+</html>
