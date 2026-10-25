@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,12 +29,15 @@ public class EmployeeController {
 
     // READ: display the registration form and employee table.
     @GetMapping
-    public String showEmployees(Model model) {
+    public String showEmployees(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            Model model) {
         model.addAttribute("employee", new Employee());
         model.addAttribute(
                 "employees",
-                employeeService.getAllEmployees()
+                employeeService.getAllEmployees(keyword)
         );
+        model.addAttribute("keyword", keyword == null ? "" : keyword);
 
         return "employees";
     }
@@ -59,7 +63,7 @@ public class EmployeeController {
         if (bindingResult.hasErrors()) {
             model.addAttribute(
                     "employees",
-                    employeeService.getAllEmployees()
+                    employeeService.getAllEmployees(null)
             );
 
             return "employees";

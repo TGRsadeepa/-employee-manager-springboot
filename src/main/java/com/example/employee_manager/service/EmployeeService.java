@@ -18,8 +18,12 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public List<Employee> getAllEmployees(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return employeeRepository.findAll();
+        }
+
+        return employeeRepository.findByFullNameContainingIgnoreCase(keyword.trim());
     }
 
     public Employee getEmployeeById(Long id) {

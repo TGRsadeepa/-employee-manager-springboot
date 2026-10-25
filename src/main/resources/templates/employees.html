@@ -196,6 +196,19 @@
     <div class="card">
         <h2>Registered Employees</h2>
 
+        <form th:action="@{/employees}" method="get">
+            <div class="field">
+                <label for="keyword">Search employees by name</label>
+                <input type="search"
+                       id="keyword"
+                       name="keyword"
+                       th:value="${keyword}"
+                       placeholder="Enter a name">
+            </div>
+            <button type="submit">Search</button>
+            <a class="button" th:href="@{/employees}">Clear</a>
+        </form>
+
         <p>
             Total employees:
             <strong th:text="${#lists.size(employees)}">0</strong>
@@ -217,7 +230,10 @@
 
                 <tbody>
                 <tr th:if="${#lists.isEmpty(employees)}">
-                    <td colspan="7">No employees registered yet.</td>
+                    <td colspan="7"
+                        th:text="${keyword != '' ? 'No matching employees found.' : 'No employees registered yet.'}">
+                        No employees registered yet.
+                    </td>
                 </tr>
 
                 <tr th:each="emp : ${employees}">
